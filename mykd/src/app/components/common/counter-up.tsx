@@ -1,0 +1,44 @@
+"use client";
+import { useState } from "react";
+import CountUp from "react-countup";
+import { InView } from "react-intersection-observer";
+
+interface CountType {
+  number: number;
+  text?: string;
+  add_style?: boolean;
+}
+
+const CounterUp = ({ number, text, add_style }: CountType) => {
+  const [focus, setFocus] = useState<boolean>(false);
+  const visibleChangeHandler = (isVisible: boolean) => {
+    if (isVisible) {
+      if (!focus) {
+        setFocus(true);
+      }
+    }
+  };
+
+  return (
+    <>
+      <CountUp start={focus ? 0 : undefined} end={number} duration={5}>
+        {({ countUpRef }) => (
+          <div
+            className={`d-flex ${add_style ? "align-items-center justify-content-center" : ""} `}
+          >
+            <span ref={countUpRef} />
+            <InView
+              as="span"
+              onChange={(inView: any) => visibleChangeHandler(inView)}
+              className="odometer"
+            >
+            </InView>
+            {text && <span className="formatting-mark">{text}</span>}
+          </div>
+        )}
+      </CountUp>
+    </>
+  );
+};
+
+export default CounterUp;
